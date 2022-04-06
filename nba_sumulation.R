@@ -1,10 +1,10 @@
-#Average ticket price last year and average season ticket price last year
+#NBA上一季之平均票價資訊，包含單場平均票價以及平均季票價
 ticket_price = 200
 season_ticket_price = 5000
-#???ҵ?NBA?F???^????ِ?Ď???
+#使用者之出席機率分佈，為0.3,0.5,0.7
 attprob=seq(0.3,0.7,0.2)
 attendence = array(data = NA)
-#N????ِ?У??????Ƿ񵽈??^ِ
+#NBA每一隊在主場的比賽次數=41
 N = 41
 
 allexp=matrix(nrow = 3, ncol = 1000) 
@@ -13,10 +13,8 @@ for(m in 1:1000){
 for(i in 1:N){
   attendence[i] = rbinom(1, 1, attprob[p])
 }
-##print(attendence)
-##print(length(attendence))
 
-#???^NBA?????????????T??��
+#NBA東區各隊明星球員數量列表
 east<- c(2,3,3,0,2,1,3,1,1,0,2,4,1,1,1)
 east_actual_show = array(data = NA)
 west_local_team = 2 
@@ -33,11 +31,8 @@ for(i in 1:length(east)){
       count_1 = count_1 + 1
     }
   }
-  ###print(count_1)
   west_local_team_show[i] = count_1
-  ##print(west_local_team_show[j])
   for(g in 1:east[i]){
-    #prob = runif()
     if(east[i] == 0){
       count_2 = count_2 + 0
     }
@@ -50,25 +45,17 @@ for(i in 1:length(east)){
     }
   }
   east_actual_show[i] = count_2
-  #print(east_actual_show[i])
   count_1 = 0
   count_2 = 0
 }
-#print(west_local_team_show)
-#print(length(west_local_team_show))
-#print(east_actual_show)
-#print(length(east_actual_show))
-#???^NBA?????????????T??��
-#all_team <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+
+#NBA西區各隊明星球員數量統計
 west <- c(1,2,0,3,1,2,2,0,0,3,1,1,2,3)
-#print(length(west))
 west_local_team_2 = 2
 west_local_team_show_2 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 west_actual_show = array(data = NA)
 team_twelve = sample(1:14,12,replace = F)
-#print(team_twelve)
-#print(length(team_twelve))
-#print(team_twelve[1])
+
 team_twelve_member = array(data = NA)
 for (i in 1:length(team_twelve)){
   team_num = team_twelve[i]
@@ -84,11 +71,8 @@ for(i in 1:26){
         count_1 = count_1 + 1
       }
     }
-    ##print(count_1)
     west_local_team_show_2[i] = count_1
-    ##print(west_local_team_show[j])
     for(g in 1:west[i]){
-      #prob = runif()
       if(west[i] == 0){
         count_2 = count_2 + 0
       }
@@ -101,7 +85,6 @@ for(i in 1:26){
       }
     }
     west_actual_show[i] = count_2
-    #print(west_actual_show[i])
     count_1 = 0
     count_2 = 0
   }
@@ -113,11 +96,9 @@ for(i in 1:26){
         count_1 = count_1 + 1
       }
     }
-    ##print(count_1)
     west_local_team_show_2[i] = count_1
-    ##print(west_local_team_show[j])
+
     for(g in 1:team_twelve_member[i-14]){
-      #prob = runif()
       if(west[i-14] == 0){
         count_2 = count_2 + 0
       }
@@ -130,17 +111,14 @@ for(i in 1:26){
       }
     }
     west_actual_show[i] = count_2
-    #print(west_actual_show[i])
     count_1 = 0
     count_2 = 0
   }
 }
-#print(west_local_team_show_2)
-#print(length(west_local_team_show_2))
-#print(west_actual_show)
-#print(length(west_actual_show))
+
+#在西區比賽時我方加上對方的明星球員數量
 all_west_show = west_local_team_show_2+west_actual_show
-#print(all_west_show)
+
 price = array(data = NA)
 for(i in 1:41){
   if(i<=26){
@@ -149,15 +127,13 @@ for(i in 1:41){
     price[i]=log(west_local_team_show[i-26]+east_actual_show[i-26]+3)*ticket_price
   }
 }
-#print(price)
 
-#price multiple
+#票價係數，使用log取值，因其ㄋ變化率最合適
 for(i in 1:8){
   a = log(i+2)
-  #print(a)
 }
 
-#?ٷ??r??
+#每日上場的明星球員數量為隨機
 assumeAllStar = array(data = NA)
 officialPrice = array(data = NA)
 count=0
@@ -170,29 +146,22 @@ for(i in 1:41){
     assumeAllStar[i]=east[i-26]+2
   }
 }
-#print(assumeAllStar)
 for(i in 1:41){
   for(j in 1:assumeAllStar[i]){
-    prob=rtr#表定出場機率(每一隊都固定)
-    i(1,0,1,0.7)
+    #表定出場機率(每一隊都固定)
+    prob=rtri(1,0,1,0.7)
     count=count+rbinom(1,1,prob)
   }
   officialPrice[i]=log(count+3)*ticket_price
   count=0
 }
-#print(officialPrice)
 
-for(h in 1:41){
-  #print(price[h]-officialPrice[h])
-}
-
+#模擬明星球員出席狀況
 Avalibility=array(data=NA)
 for(i in 1:41){
   if(i<=26){
-    #Avalibility[i]=1-0.3*log(all_west_show[i]+3)
     Avalibility[i]=rtri(1,0.09,1,0.7-0.1*all_west_show[i])
   }else{
-    #Avalibility[i]=1-0.3*log(west_local_team_show[i-26]+east_actual_show[i-26]+3)
     Avalibility[i]=rtri(1,0.09,1,0.7-0.1*(west_local_team_show[i-26]+east_actual_show[i-26]))
   }
 }
@@ -202,7 +171,8 @@ cheaperPrice=0
 moreExpensivePrice=0
 for(i in 1:length(attendence)){
   if(attendence[i]==0){
-    #do nothi當天原本就不來{
+    #使用者原本當天就不出席，do nothing!
+    {
     canBuy=rbinom(2,1,Avalibility[2])
     if(price[i]<=officialPrice[i]){
       cheaperPrice=price[i]
@@ -213,14 +183,14 @@ for(i in 1:length(attendence)){
     }
     
     if(canBuy[1]==1){
-      #?I???^???˵??Ј?
+      #便宜的購買渠道可以買得到票
       expenditure=expenditure+cheaperPrice
     }else if(canBuy[2]==1){
-      #?I???^?F???Ј?
+      #便宜的買不到票，轉買貴的渠道
       expenditure=expenditure+moreExpensivePrice
     }else{
+      #因為沒有票，今日無法觀看比賽
   }
-#print(expenditure)
 allexp[p,m]=expenditure
 }
 }
@@ -259,6 +229,8 @@ for(j in 1:3){
   qtable[j,3]=quantile(allexp2[j,],0.75)
   
 }
-print(summaryTable)#ʡ?X?ęC??
-print(qtable)#?ٷ?λ????
+
+#結果統計表
+print(summaryTable)
+print(qtable)
 
